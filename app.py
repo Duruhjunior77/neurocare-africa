@@ -1,134 +1,167 @@
-import os
 import streamlit as st
+from pathlib import Path
+from datetime import date
+import random
 
 # -----------------------------
-# Page config
+# PAGE CONFIG (mobile + PC)
 # -----------------------------
 st.set_page_config(
     page_title="NeuroCare Africa",
     page_icon="🧠",
     layout="wide",
+    initial_sidebar_state="collapsed",  # better on mobile
 )
 
 # -----------------------------
-# Helpers
+# PATHS
 # -----------------------------
-def show_logo(path: str, width: int = 120):
-    if os.path.exists(path):
-        st.image(path, width=width)
-    else:
-        st.caption("Logo not found yet. Add it later at: assets/logos/nch_logo.png")
-
-def disclaimer_block():
-    st.warning(
-        "Educational use only. This platform does not provide medical advice, diagnosis, or treatment. "
-        "If symptoms feel urgent or severe, seek emergency care immediately."
-    )
-
-# -----------------------------
-# Sidebar (Brand + Governance)
-# -----------------------------
-with st.sidebar:
-    st.title("NeuroCare Africa")
-    st.caption("Making brain health knowledge accessible to everyone.")
-
-    st.markdown("---")
-    st.subheader("Governance")
-    st.markdown(
-        "**Sponsored by:** Neuroscience Collaboration Hub (NCH)\n\n"
-        "**Founder & Project Lead:** Joseph Duruh\n\n"
-        "**NCH Co-Founders:** Joseph Duruh, Ashika Sharma\n\n"
-        "**Supported by:**\n"
-        "- African Brain Data Network (ABDN) — Dr. Ebere Wogu (General Director)\n"
-        "- Youth Neuroscience Association of Nigeria (YNAN) — Dr. Chinna Orish (Founder)\n"
-    )
-
-    st.markdown("---")
-    st.subheader("Quick Links")
-    st.markdown(
-        "- Brain Warning Signs\n"
-        "- What To Do Now\n"
-        "- Brain Wellness\n"
-        "- Myth vs Fact\n"
-        "- About NeuroCare\n"
-    )
-
-# -----------------------------
-# Main Home Page
-# -----------------------------
-left, right = st.columns([2, 1], gap="large")
-
-with left:
-    st.markdown("# 🧠 NeuroCare Africa")
-    st.markdown(
-        "### Neuroscience for everyone — clear, practical, and community-focused.\n\n"
-        "NeuroCare Africa is an educational brain health awareness initiative designed to help people:\n"
-        "- Recognize early warning signs of neurological emergencies\n"
-        "- Learn immediate, safe actions to take\n"
-        "- Understand everyday habits that protect brain health\n"
-        "- Separate myths from facts with simple explanations\n"
-    )
-    disclaimer_block()
-
-    st.markdown("## What you can explore")
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.info("**Brain Warning Signs**\n\nStroke, seizures, head injury red flags, and when to act fast.")
-    with c2:
-        st.info("**What To Do Now**\n\nSimple steps you can take while seeking professional care.")
-    with c3:
-        st.info("**Brain Wellness**\n\nSleep, stress, blood pressure, movement, and prevention education.")
-
-    st.markdown("## Why this matters")
-    st.write(
-        "Brain-related emergencies can be time-sensitive. Clear knowledge can reduce panic, "
-        "support faster decisions, and encourage early medical help. "
-        "This project focuses on education that is easy to understand and share."
-    )
-
-with right:
-    st.markdown("## Today’s Brain Tip")
-    tips = [
-        "Prioritize sleep — your brain consolidates memory while you rest.",
-        "Know FAST signs of stroke: Face drooping, Arm weakness, Speech difficulty, Time to call for help.",
-        "High blood pressure can silently raise stroke risk — check it regularly.",
-        "Hydration matters — dehydration can worsen headaches and concentration.",
-        "Consistent movement supports brain health and mood.",
-    ]
-    st.success(tips[st.session_state.get("tip_idx", 0) % len(tips)])
-
-    colA, colB = st.columns(2)
-    if colA.button("New tip"):
-        st.session_state["tip_idx"] = st.session_state.get("tip_idx", 0) + 1
-        st.rerun()
-    colB.button("Share tip (copy)", help="Long-press or copy from the tip box above.")
-
-# Footer
-st.markdown("---")
-st.caption(
-    "NeuroCare Africa is an initiative of the Neuroscience Collaboration Hub (NCH), co-founded by Joseph Duruh and Ashika Sharma. "
-    "Supported by African Brain Data Network (ABDN) and Youth Neuroscience Association of Nigeria (YNAN)."
-)
-from pathlib import Path
-
 BASE_DIR = Path(__file__).resolve().parent
-# If this code is inside pages/*, BASE_DIR is /pages
-# so we go one step up:
 ROOT_DIR = BASE_DIR.parent if BASE_DIR.name == "pages" else BASE_DIR
 
+LOGO_NCH = ROOT_DIR / "assets" / "logos" / "nch_logo.png"
+LOGO_ABDN = ROOT_DIR / "assets" / "logos" / "ABDN.png"
+LOGO_YNAN = ROOT_DIR / "assets" / "logos" / "ynan.jpeg"
+
+# -----------------------------
+# MOBILE-FRIENDLY CSS
+# -----------------------------
+st.markdown(
+    """
+<style>
+/* reduce padding for better mobile fit */
+.block-container {padding-top: 1.0rem; padding-bottom: 1.2rem;}
+@media (max-width: 768px){
+  .block-container {padding-left: 0.9rem; padding-right: 0.9rem;}
+}
+
+/* nicer headings */
+h1, h2, h3 {letter-spacing: -0.2px;}
+.small-note {opacity: 0.85; font-size: 0.92rem;}
+
+/* card-like containers */
+.card {
+  padding: 14px 14px;
+  border: 1px solid rgba(49, 51, 63, 0.15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* footer logos align */
+.footer-caption {text-align:center; margin-top:6px; opacity:0.85; font-size:0.9rem;}
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
+# -----------------------------
+# HEADER (no sidebar logo)
+# -----------------------------
+top_left, top_right = st.columns([1, 3], vertical_alignment="center")
+
+with top_left:
+    # Header logo: show only if file exists
+    if LOGO_NCH.exists():
+        st.image(str(LOGO_NCH), width=90)
+    else:
+        st.write("🧠")
+
+with top_right:
+    st.title("NeuroCare Africa")
+    st.markdown(
+        "<div class='small-note'>Practical, accessible brain-health education for everyone.</div>",
+        unsafe_allow_html=True,
+    )
+
+st.markdown("")
+
+# -----------------------------
+# MAIN CONTENT (mobile-friendly single column, then optional split)
+# -----------------------------
+st.markdown(
+    """
+<div class="card">
+<b>What this is:</b> A community-focused brain health resource hub.  
+<b>What this is not:</b> A medical diagnosis or emergency service.
+</div>
+""",
+    unsafe_allow_html=True,
+)
+
+st.markdown("")
+
+# On desktop, two columns look good; on mobile Streamlit will stack them automatically.
+col_a, col_b = st.columns([2, 1], gap="large")
+
+with col_a:
+    st.subheader("Start here")
+    st.write(
+        "Explore simple, science-informed guidance on brain warning signs, what to do next, "
+        "healthy habits, and common myths. Use the sidebar to open each page."
+    )
+
+    st.markdown("**Quick links (use sidebar too):**")
+    st.write("- Brain Warning Signs")
+    st.write("- What To Do Now")
+    st.write("- Brain Wellness")
+    st.write("- Myth vs Fact")
+    st.write("- About NeuroCare")
+
+with col_b:
+    st.subheader("Today’s Brain Tip")
+    tips = [
+        "Sleep is brain maintenance. Aim for consistent sleep and wake times.",
+        "Hydration supports focus. Drink water regularly through the day.",
+        "Short walks improve mood and attention—10 minutes counts.",
+        "Stress is real. Slow breathing for 2 minutes can calm your nervous system.",
+        "Learning something new strengthens brain networks over time.",
+    ]
+    # deterministic daily tip
+    random.seed(str(date.today()))
+    st.info(random.choice(tips))
+
+st.markdown("")
+
+# -----------------------------
+# SAFETY / DISCLAIMER (important)
+# -----------------------------
+with st.expander("Important note", expanded=False):
+    st.write(
+        "This tool is for education and awareness only. It does not provide medical advice, "
+        "diagnosis, or treatment. If you have severe symptoms (e.g., sudden weakness, "
+        "difficulty speaking, seizure, fainting, severe headache, confusion), seek urgent "
+        "medical help immediately."
+    )
+
+# -----------------------------
+# FOOTER: SUPPORTED BY (responsive)
+# -----------------------------
 st.markdown("---")
 st.subheader("Supported by")
 
-c1, c2, c3 = st.columns([1, 1, 1])
+# Smaller logo widths help on mobile; columns will stack naturally on small screens.
+logo_width = 170
 
-with c1:
-    st.image(str(ROOT_DIR / "assets" / "logos" / "nch_logo.png"), use_container_width=True)
-    st.caption("Neuroscience Collaboration Hub (NCH)")
+f1, f2, f3 = st.columns(3, gap="large")
 
-with c2:
-    st.image(str(ROOT_DIR / "assets" / "logos" / "ABDN.png"), use_container_width=True)
-    st.caption("African Brain Data Network (ABDN)")
+with f1:
+    if LOGO_NCH.exists():
+        st.image(str(LOGO_NCH), width=logo_width)
+    st.markdown("<div class='footer-caption'>Neuroscience Collaboration Hub (NCH)</div>", unsafe_allow_html=True)
 
-with c3:
-    st.image(str(ROOT_DIR / "assets" / "logos" / "ynan.jpeg"), use_container_width=True)
-    st.caption("Youth Neuroscience Association of Nigeria (YNAN)")
+with f2:
+    if LOGO_ABDN.exists():
+        st.image(str(LOGO_ABDN), width=logo_width)
+    st.markdown("<div class='footer-caption'>African Brain Data Network (ABDN)</div>", unsafe_allow_html=True)
+
+with f3:
+    if LOGO_YNAN.exists():
+        st.image(str(LOGO_YNAN), width=logo_width)
+    st.markdown("<div class='footer-caption'>Youth Neuroscience Association of Nigeria (YNAN)</div>", unsafe_allow_html=True)
+
+st.markdown(
+    "<div class='small-note' style='text-align:center; margin-top: 10px;'>"
+    "© NeuroCare Africa — built to improve brain-health awareness across communities."
+    "</div>",
+    unsafe_allow_html=True,
+)
