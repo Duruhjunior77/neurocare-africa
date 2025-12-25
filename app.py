@@ -165,3 +165,28 @@ st.markdown(
     "</div>",
     unsafe_allow_html=True,
 )
+st.markdown("---")
+st.subheader("Supported by")
+
+c1, c2, c3 = st.columns(3)
+
+with c1:
+    st.image(
+        "assets/logos/nch_logo.png",
+        width=140
+    )
+    st.caption("Neuroscience Collaboration Hub (NCH)")
+
+with c2:
+    st.image(
+        "assets/logos/ABDN.png",
+        width=140
+    )
+    st.caption("African Brain Data Network (ABDN)")
+
+with c3:
+    st.image(
+        "assets/logos/ynan.jpeg",
+        width=140
+    )
+    st.caption("Youth Neuroscience Association of Nigeria (YNAN)")
