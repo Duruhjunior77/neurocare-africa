@@ -140,7 +140,7 @@ st.markdown("---")
 st.subheader("Supported by")
 
 # Smaller logo widths help on mobile; columns will stack naturally on small screens.
-logo_width = 170
+logo_width = 140
 
 f1, f2, f3 = st.columns(3, gap="large")
 
