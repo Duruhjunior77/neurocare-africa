@@ -1,0 +1,29 @@
+import streamlit as st
+
+st.title("About NeuroCare Africa")
+st.caption("Who we are, why we built this, and how to support the mission.")
+
+st.subheader("Mission")
+st.write(
+    "NeuroCare Africa exists to translate neuroscience and brain health knowledge into clear, practical education "
+    "that people can understand and use in everyday life."
+)
+
+st.subheader("Governance & Sponsorship")
+st.markdown(
+    "**Sponsored by:** Neuroscience Collaboration Hub (NCH)\n\n"
+    "**Founder & Project Lead:** Joseph Duruh\n\n"
+    "**NCH Co-Founders:** Joseph Duruh, Ashika Sharma\n\n"
+    "**Supported by:**\n"
+    "- African Brain Data Network (ABDN) — Dr. Ebere Wogu (General Director)\n"
+    "- Youth Neuroscience Association of Nigeria (YNAN) — Dr. Chinna Orish (Founder)\n"
+)
+
+st.subheader("Ethics & Safety")
+st.write(
+    "This platform is for education and awareness only. It does not provide medical diagnosis or treatment. "
+    "For personal medical concerns, consult a qualified health professional."
+)
+
+st.subheader("Contact / Collaboration")
+st.write("If you want to collaborate, support, or contribute content, we can add a contact section next.")
