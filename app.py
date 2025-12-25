@@ -136,57 +136,40 @@ with st.expander("Important note", expanded=False):
 # -----------------------------
 # FOOTER: SUPPORTED BY (responsive)
 # -----------------------------
+from pathlib import Path
+import streamlit as st
+
+BASE_DIR = Path(__file__).resolve().parent
+ROOT_DIR = BASE_DIR.parent if BASE_DIR.name == "pages" else BASE_DIR
+
+# ---- Footer: Supported by (ONLY ONCE) ----
 st.markdown("---")
 st.subheader("Supported by")
 
-# Smaller logo widths help on mobile; columns will stack naturally on small screens.
-logo_width = 140
-
-f1, f2, f3 = st.columns(3, gap="large")
-
-with f1:
-    if LOGO_NCH.exists():
-        st.image(str(LOGO_NCH), width=logo_width)
-    st.markdown("<div class='footer-caption'>Neuroscience Collaboration Hub (NCH)</div>", unsafe_allow_html=True)
-
-with f2:
-    if LOGO_ABDN.exists():
-        st.image(str(LOGO_ABDN), width=logo_width)
-    st.markdown("<div class='footer-caption'>African Brain Data Network (ABDN)</div>", unsafe_allow_html=True)
-
-with f3:
-    if LOGO_YNAN.exists():
-        st.image(str(LOGO_YNAN), width=logo_width)
-    st.markdown("<div class='footer-caption'>Youth Neuroscience Association of Nigeria (YNAN)</div>", unsafe_allow_html=True)
-
+# Small CSS so images don’t stretch weirdly (helps blur)
 st.markdown(
-    "<div class='small-note' style='text-align:center; margin-top: 10px;'>"
-    "© NeuroCare Africa — built to improve brain-health awareness across communities."
-    "</div>",
-    unsafe_allow_html=True,
+    """
+    <style>
+      div[data-testid="stImage"] img {
+        image-rendering: auto;
+        max-height: 90px;
+        width: auto;
+      }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
-st.markdown("---")
-st.subheader("Supported by")
 
 c1, c2, c3 = st.columns(3)
 
 with c1:
-    st.image(
-        "assets/logos/nch_logo.png",
-        width=140
-    )
+    st.image(str(ROOT_DIR / "assets" / "logos" / "nch_logo.png"), width=180)
     st.caption("Neuroscience Collaboration Hub (NCH)")
 
 with c2:
-    st.image(
-        "assets/logos/ABDN.png",
-        width=140
-    )
+    st.image(str(ROOT_DIR / "assets" / "logos" / "ABDN.png"), width=180)
     st.caption("African Brain Data Network (ABDN)")
 
 with c3:
-    st.image(
-        "assets/logos/ynan.jpeg",
-        width=140
-    )
+    st.image(str(ROOT_DIR / "assets" / "logos" / "ynan.jpeg"), width=180)
     st.caption("Youth Neuroscience Association of Nigeria (YNAN)")
